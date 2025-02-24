@@ -1,5 +1,5 @@
 import { Loader2, RotateCcw, StarsIcon, WandSparkles } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, {  useMemo, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -34,8 +34,12 @@ import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { ExtractData } from "../../utils/extract-data";
 import { AIAction } from "../../hooks/instructions-messages";
-const placeholders = ["chat with what you are writing", "click on the stpper to generate task step by step","click on autocompelte to complete sentince","your text to long? you want to make it smaller?"];
-
+const placeholders = [
+  "Chat with what you are writing.",
+  "Click on the stepper to generate tasks step by step.",
+  "Click on autocomplete to complete sentences.",
+  "Is your text too long? Do you want to make it shorter?"
+];
 export default function AiButton({ editor }: { editor: LexicalEditor }) {
   const [actionType, setActionType] = useState<AIAction | null>(null); // track the user action
   const [streamedResponse, setStreamedResponse] = useState<string>("");
@@ -391,8 +395,8 @@ export default function AiButton({ editor }: { editor: LexicalEditor }) {
   );
  
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Popover >
+      <PopoverTrigger  asChild>
         <button className="inline-flex px-6 max-sm:py-2 max-sm:px-[5px]  h-6 animate-background-shine items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%]   font-medium text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50">
           <WandSparkles className=" size-4 text-purple-400" />
         </button>

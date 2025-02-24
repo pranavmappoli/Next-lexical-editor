@@ -44,7 +44,7 @@ export const getNodePlaceholder = (lexicalNode: LexicalNode) => {
    
    if ($isParagraphNode(lexicalNode)) {
       
-      placeholder = "Press '/' for command, ctrl+alt+a for ai menue";
+      placeholder = "Press '/' for command";
    }
 
    return placeholder;

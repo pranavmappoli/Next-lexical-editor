@@ -1,6 +1,6 @@
 "use client";
-import { $getNodeByKey, $getRoot, LexicalEditor, NodeKey } from "lexical";
-import React, { useEffect, useState } from "react";
+import { $getNodeByKey, LexicalEditor, NodeKey } from "lexical";
+import React from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { cva } from "class-variance-authority";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -8,10 +8,7 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { LexicalNestedComposer } from "@lexical/react/LexicalNestedComposer";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
-import { Button } from "@/components/ui/button";
-import { LoaderCircle, StarsIcon } from "lucide-react";
 import { $isHintNode, HintType } from ".";
-import { insertText } from "../../utils/ai";
 
 const hintVariants = cva(
   "hint p-4 max-sm:p-2 transition-colors   my-2 flex flex-row max-sm:flex-col items-start relative   justify-between rounded-md straight-corners:rounded-none w-full text-destructive-foreground  shadow-xl mx-auto max-w-3xl",
@@ -36,94 +33,6 @@ const hintVariants = cva(
   }
 );
 
-function getWordsAboveHint(
-  editor: LexicalEditor,
-  hintNodeKey: NodeKey,
-  numWords: number
-): string {
-  let collectedText = "";
-  let found = false;
-
-  // Recursively traverse nodes in document order.
-  function traverse(node: any) {
-    if (found) return; // Already encountered the hint node; stop further traversal.
-    if (node.getKey() === hintNodeKey) {
-      found = true;
-      return;
-    }
-    // Append this node's text if available.
-    // This works whether the node is a text node or a container.
-    collectedText += node.getTextContent() + " ";
-
-    // If the node has children, traverse them.
-    if (typeof node.getChildren === "function") {
-      const children = node.getChildren();
-      for (const child of children) {
-        traverse(child);
-        if (found) break; // Stop if the hint node was found in a child.
-      }
-    }
-  }
-
-  editor.getEditorState().read(() => {
-    const root = $getRoot();
-    const children = root.getChildren();
-
-    for (const child of children) {
-      traverse(child);
-      if (found) break;
-    }
-  });
-
-  const words = collectedText.trim().split(/\s+/);
-
-  return words.slice(-numWords).join(" ");
-}
-
-const HintAIButton = ({
-  type,
-  editor,
-  captionEditor,
-  NodeKey,
-}: {
-  type: HintType;
-  editor: LexicalEditor;
-  captionEditor: LexicalEditor;
-  NodeKey: NodeKey;
-}) => {
-  // const { WriteHint, isLoading, error } = useAI();
-  const handleWrites = async () => {
-    captionEditor.focus();
-    const context = getWordsAboveHint(editor, NodeKey, 120);
-    if (!context) return;
-
-    try {
-      // const stream = WriteHint(context, type);
-      // if (!stream) return;
-      // for await (const response of stream) {
-      //   insertText(response, captionEditor);
-      // }
-    } catch (error) {
-      console.error("Error while writing hint:", error);
-    }
-  };
-
-  return (
-    <Button
-      onClick={handleWrites}
-      tip={false ? "AI is thinking..." : `Write ${type} message`}
-      className=" group    absolute top-0.5 right-0.5 h-6 w-6"
-      variant={"outline"}
-      size={"icon"}
-    >
-      {false ? (
-        <LoaderCircle className="text-purple-500 size-4 animate-spin" />
-      ) : (
-        <StarsIcon className=" size-4 dark:text-white text-black group-hover:text-purple-500  transition-colors" />
-      )}
-    </Button>
-  );
-};
 
 export default function HintComponent({
   type,
@@ -307,14 +216,6 @@ export default function HintComponent({
           ErrorBoundary={LexicalErrorBoundary}
         />
       </LexicalNestedComposer>
-      {editor.isEditable() && (
-        <HintAIButton
-          NodeKey={nodeKey}
-          captionEditor={captionEditor}
-          editor={editor}
-          type={type}
-        />
-      )}
     </div>
   );
 }

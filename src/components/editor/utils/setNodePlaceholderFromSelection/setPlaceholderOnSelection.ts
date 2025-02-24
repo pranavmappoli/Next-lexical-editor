@@ -3,6 +3,8 @@ import { getAllLexicalChildren } from '../getAllLexicalChildren';
 import { getNodePlaceholder } from './getNodePlaceholder';
 
 import './styles.css';
+import { $isCollapsibleContainerNode } from '../../nodes/CollapsibleNode/CollapsibleContainerNode';
+import { $isCollapsibleContentNode } from '../../nodes/CollapsibleNode/CollapsibleContentNode';
 
 const PLACEHOLDER_CLASS_NAME = 'node-placeholder';
 
@@ -21,31 +23,58 @@ export const setPlaceholderOnSelection = ({
     * 1. Get all lexical nodes as HTML elements
     */
    const children = getAllLexicalChildren(editor);
-
+   
+   
    /**
     * 2. Remove "placeholder" class if it was added before
     */
-   children.forEach(({ htmlElement }:any) => {
+   const removePlaceholderClass = (element: HTMLElement) => {
+      if (!element) return;
+   
+      // Remove the placeholder class from the current element
+      if (element.classList.contains(PLACEHOLDER_CLASS_NAME)) {
+         element.classList.remove(PLACEHOLDER_CLASS_NAME);
+         element.removeAttribute('data-placeholder');
+      }
+   
+      // Recursively process child elements
+      Array.from(element.children).forEach(child => {
+         if (child instanceof HTMLElement) {
+            removePlaceholderClass(child);
+         }
+      });
+   };
+   
+   children.forEach(({ htmlElement,node  }:any) => {
       if (!htmlElement) {
          return;
       }
 
-      if (isHtmlHeadingElement(htmlElement)) {
+      if (isHtmlHeadingElement(htmlElement)) {         
          return;
       }
-
+    
+   
       const classList = htmlElement.classList;
+      if (node.__type === 'collapsible-container') {
+         console.log('Processing collapsible-container node:', node);
+         removePlaceholderClass(htmlElement);
 
-      if (classList.length && classList.contains(PLACEHOLDER_CLASS_NAME)) {
+         return;
+      }
+   
+      if (classList.length && classList.contains(PLACEHOLDER_CLASS_NAME)) {         
          classList.remove(PLACEHOLDER_CLASS_NAME);
+         htmlElement.removeAttribute('data-placeholder');
+
       }
    });
 
    /**
     * 3. Do nothing if there is only one lexical child,
-    * because we already have a placeholder
-    * in <RichTextPlugin/> component
-    * With on exception: If we converted default node to the "Heading"
+    *  because we already have a placeholder
+    *  in <RichTextPlugin/> component
+    *  With on exception: If we converted default node to the "Heading"
     */
    if (
       children.length === 1 &&
@@ -73,7 +102,7 @@ export const setPlaceholderOnSelection = ({
 
    if (placeholder) {
       const selectedHtmlElement = editor.getElementByKey(anchor.key);
-
+      
       selectedHtmlElement?.classList.add(PLACEHOLDER_CLASS_NAME);
       selectedHtmlElement?.setAttribute('data-placeholder', placeholder);
    }
