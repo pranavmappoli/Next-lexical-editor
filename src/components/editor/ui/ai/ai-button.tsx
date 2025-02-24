@@ -237,7 +237,7 @@ export default function AiButton({ editor }: { editor: LexicalEditor }) {
           HoverCard: {
             desc: "Enhance your text by adding more detail and context. Let AI expand your ideas! 🚀",
           },
-          onClick: () => handleMakeLong,
+          onClick:handleMakeLong,
         },
         {
           icon: (
