@@ -428,12 +428,12 @@ export default function AiButton({ editor }: { editor: LexicalEditor }) {
                   clockwise={false}
                   containerClassName="rounded-full border-0"
                   as="button"
-                  className="dark:bg-white size-5  bg-dark dark:text-white flex justify-center items-center"
+                  className="dark:bg-white size-5  bg-black dark:text-white flex justify-center items-center"
                 >
                   {isLoading ? (
                     <Loader2 className="size-3 dark:text-black text-white animate-spin" />
                   ) : (
-                    <StarsIcon className="text-purple-600 size-3" />
+                    <StarsIcon className="dark:text-purple-600 text-purple-300 size-3" />
                   )}
                 </HoverBorderGradient>
               </div>

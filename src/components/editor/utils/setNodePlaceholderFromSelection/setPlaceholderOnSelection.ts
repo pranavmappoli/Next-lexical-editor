@@ -54,15 +54,20 @@ export const setPlaceholderOnSelection = ({
          return;
       }
     
-   
+      
+      
       const classList = htmlElement.classList;
       if (node.__type === 'collapsible-container') {
-         console.log('Processing collapsible-container node:', node);
          removePlaceholderClass(htmlElement);
-
          return;
       }
-   
+      if (node.__type === 'table') {
+         removePlaceholderClass(htmlElement);
+         return;
+      }
+      if(node.__type==="layout-container"){
+         removePlaceholderClass(htmlElement);
+      }
       if (classList.length && classList.contains(PLACEHOLDER_CLASS_NAME)) {         
          classList.remove(PLACEHOLDER_CLASS_NAME);
          htmlElement.removeAttribute('data-placeholder');

@@ -303,7 +303,7 @@ export default function index({
   return (
     <nav
       className={cn(
-        "z-50 fixed top-0 left-0  backdrop-blur-md bg-white/10 dark:bg-black/10 w-full  border-gray-500/20",
+        "z-[200] fixed top-0 left-0  backdrop-blur-md bg-white/10 dark:bg-black/10 w-full  border-gray-500/20",
         
         
       )}

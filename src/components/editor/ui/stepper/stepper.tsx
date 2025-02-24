@@ -57,7 +57,6 @@ export default function Stepper({
           title: `New step `,
           content: newEditor,
         };
-        console.log("add",newStep);
         
         node.insertStepAtIndex(newStep, index);
       }
@@ -70,7 +69,7 @@ export default function Stepper({
       axis="y"
       values={steps}
       onReorder={SetSteps}
-      className="h-fit min-h-[100px] w-full overflow-hidden flex flex-col relative"
+      className="h-fit my-2 min-h-[90px] w-full overflow-hidden flex flex-col relative"
     >
       <AnimatePresence initial={false}>
         {steps.map((item, index) => (
